@@ -1,0 +1,26 @@
+{
+  "name": "meerkat-client",
+  "version": "0.0.1",
+  "main": "index.js",
+  "description": "node.js client for meerkat logging framework",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maximilian-krauss/meerkat-client.git"
+  },
+  "author": "Maximilian Krauß <max@krauss.io>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=4.1",
+    "npm": ">= 3.1"
+  },
+  "bugs": {
+    "url": "https://github.com/maximilian-krauss/meerkat-client/issues"
+  },
+  "homepage": "https://github.com/maximilian-krauss/meerkat-client#readme",
+  "dependencies": {
+    "lodash": "^3.10.1",
+    "request": "^2.64.0",
+    "url-join": "0.0.1"
+  }
+}
