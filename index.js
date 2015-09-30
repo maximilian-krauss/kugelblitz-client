@@ -10,7 +10,9 @@ class Client {
       endpoint: null,
       token: null,
       intervalInSeconds: 5 * 60,
-      requestTimeoutInSeconds: 1 * 60
+      requestTimeoutInSeconds: 1 * 60,
+      production: process.env.NODE_ENV === 'production',
+      debug: false
     };
 
     const mergedOptions = _.extend(
@@ -22,6 +24,8 @@ class Client {
     this.intervalInSeconds = mergedOptions.intervalInSeconds;
     this.requestTimeoutInSeconds = mergedOptions.requestTimeoutInSeconds;
     this.token = mergedOptions.token;
+    this.production = mergedOptions.production;
+    this.debug = mergedOptions.debug;
 
     if(!this.endpoint) {
       throw new Error('An endpoint must be provided!');
@@ -33,6 +37,14 @@ class Client {
 
     if(this.intervalInSeconds <= this.requestTimeoutInSeconds) {
       throw new Error(`The interval (${this.intervalInSeconds}s) must be greater than the request timeout (${this.requestTimeoutInSeconds}s)`);
+    }
+
+    if(!this.production) {
+      console.log('meerkat-client:', 'The production option is set to false. No API calls will be made');
+    }
+
+    if(this.debug) {
+      console.log('meerkat-client:', 'Debug mode is active');
     }
 
     this._sendPing();
@@ -55,7 +67,18 @@ class Client {
       }
     };
 
+    if(!this.production) {
+      return;
+    }
+
     request(options, (error, response, body) => {
+      if(this.debug) {
+        if(error) {
+          return console.error('meerkat-client:', 'Failed to send meerkat heartbeat:', error);
+        }
+
+        console.log('meerkat-client:', 'heartbeat sent!');
+      }
     });
   }
 
