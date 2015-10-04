@@ -58,7 +58,7 @@ class Client {
 
   _sendPing() {
     const options = {
-      url: urljoin(this.endpoint, '/event/heartbeat'),
+      url: urljoin(this.endpoint, '/api/v1/heartbeat'),
       method: 'POST',
       json: true,
       timeout: this.requestTimeoutInSeconds * 1000,
