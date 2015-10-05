@@ -47,16 +47,16 @@ class Client {
       console.log('meerkat-client:', 'Debug mode is active');
     }
 
-    this._sendPing();
+    this._sendHeartbeat();
 
     setInterval(() => {
-        this._sendPing();
+        this._sendHeartbeat();
       }.bind(this),
       this.intervalInSeconds * 1000
     );
   }
 
-  _sendPing() {
+  _sendHeartbeat() {
     const options = {
       url: urljoin(this.endpoint, '/api/v1/heartbeat'),
       method: 'POST',
@@ -73,13 +73,44 @@ class Client {
 
     request(options, (error, response, body) => {
       if(this.debug) {
-        if(error) {
+        if(error || response.statusCode !== 200) {
           return console.error('meerkat-client:', 'Failed to send meerkat heartbeat:', error);
         }
 
         console.log('meerkat-client:', 'heartbeat sent!');
       }
     });
+  }
+
+  _sendReport(type, payload, cb) {
+    const options = {
+      url: urljoin(this.endpoint, '/api/v1/report'),
+      method: 'POST',
+      json: true,
+      body: { type: type, payload: JSON.stringify(payload) },
+      timeout: this.requestTimeoutInSeconds * 1000,
+      headers: {
+        'X-MEERKAT-TOKEN': this.token
+      }
+    };
+
+    request(options, (error, response, body) => {
+      if(error || response.statusCode !== 201) {
+        return cb(error || new Error(`Failed to send heartbeat. Server sent a HTTP ${response.statusCode}`));
+      }
+
+      return cb(null);
+    });
+  }
+
+  reportError(error, cb) {
+    return this._sendReport(
+      'error',
+      {
+        message: error.message,
+        stack: error.stack ? error.stack : null
+      }, cb
+    );
   }
 
 }
