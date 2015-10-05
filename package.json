@@ -1,12 +1,12 @@
 {
-  "name": "meerkat-client",
+  "name": "kugelblitz-client",
   "version": "0.0.3",
   "main": "index.js",
-  "description": "node.js client for meerkat logging framework",
+  "description": "node.js client for kugelblitz logging framework",
   "scripts": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/maximilian-krauss/meerkat-client.git"
+    "url": "git+https://github.com/maximilian-krauss/kugelblitz-client.git"
   },
   "author": "Maximilian Krauß <max@krauss.io>",
   "license": "MIT",
@@ -15,9 +15,9 @@
     "npm": ">= 3.1"
   },
   "bugs": {
-    "url": "https://github.com/maximilian-krauss/meerkat-client/issues"
+    "url": "https://github.com/maximilian-krauss/kugelblitz-client/issues"
   },
-  "homepage": "https://github.com/maximilian-krauss/meerkat-client#readme",
+  "homepage": "https://github.com/maximilian-krauss/kugelblitz-client#readme",
   "dependencies": {
     "lodash": "^3.10.1",
     "request": "^2.64.0",

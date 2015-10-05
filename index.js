@@ -2,7 +2,8 @@
 
 const _ = require('lodash'),
       request = require('request'),
-      urljoin = require('url-join');
+      urljoin = require('url-join'),
+      clientName = 'kugelblitz-client:';
 
 class Client {
   constructor(options) {
@@ -40,11 +41,11 @@ class Client {
     }
 
     if(!this.production) {
-      console.log('meerkat-client:', 'The production option is set to false. No API calls will be made');
+      console.log(clientName, 'The production option is set to false. No API calls will be made');
     }
 
     if(this.debug) {
-      console.log('meerkat-client:', 'Debug mode is active');
+      console.log(clientName, 'Debug mode is active');
     }
 
     this._sendHeartbeat();
@@ -63,7 +64,7 @@ class Client {
       json: true,
       timeout: this.requestTimeoutInSeconds * 1000,
       headers: {
-        'X-MEERKAT-TOKEN': this.token
+        'X-KUGELBITZ-TOKEN': this.token
       }
     };
 
@@ -74,10 +75,10 @@ class Client {
     request(options, (error, response, body) => {
       if(this.debug) {
         if(error || response.statusCode !== 200) {
-          return console.error('meerkat-client:', 'Failed to send meerkat heartbeat:', error);
+          return console.error(clientName, 'Failed to send kugelblitz heartbeat:', error);
         }
 
-        console.log('meerkat-client:', 'heartbeat sent!');
+        console.log(clientName, 'heartbeat sent!');
       }
     });
   }
@@ -90,7 +91,7 @@ class Client {
       body: { type: type, payload: JSON.stringify(payload) },
       timeout: this.requestTimeoutInSeconds * 1000,
       headers: {
-        'X-MEERKAT-TOKEN': this.token
+        'X-KUGELBLITZ-TOKEN': this.token
       }
     };
 
