@@ -64,7 +64,7 @@ class Client {
       json: true,
       timeout: this.requestTimeoutInSeconds * 1000,
       headers: {
-        'X-KUGELBITZ-TOKEN': this.token
+        'X-KUGELBLITZ-TOKEN': this.token
       }
     };
 
@@ -75,7 +75,7 @@ class Client {
     request(options, (error, response, body) => {
       if(this.debug) {
         if(error || response.statusCode !== 200) {
-          return console.error(clientName, 'Failed to send kugelblitz heartbeat:', error);
+          return console.error(clientName, 'Failed to send kugelblitz heartbeat:', error, response.statusCode);
         }
 
         console.log(clientName, 'heartbeat sent!');
