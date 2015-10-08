@@ -75,7 +75,7 @@ class Client {
     request(options, (error, response, body) => {
       if(this.debug) {
         if(error || response.statusCode !== 200) {
-          return console.error(clientName, 'Failed to send kugelblitz heartbeat:', error, response.statusCode);
+          return console.error(clientName, 'Failed to send kugelblitz heartbeat:', error, response);
         }
 
         console.log(clientName, 'heartbeat sent!');
@@ -95,8 +95,13 @@ class Client {
       }
     };
 
+    if(!this.production) {
+      return cb(null);
+    }
+
     request(options, (error, response, body) => {
       if(error || response.statusCode !== 201) {
+        console.log(error, response);
         return cb(error || new Error(`Failed to send heartbeat. Server sent a HTTP ${response.statusCode}`));
       }
 
@@ -104,14 +109,21 @@ class Client {
     });
   }
 
-  reportError(error, cb) {
-    return this._sendReport(
-      'error',
-      {
-        message: error.message,
-        stack: error.stack ? error.stack : null
-      }, cb
-    );
+  reportError(error) {
+    return new Promise((rs, rj) => {
+      this._sendReport(
+        'error',
+        {
+          message: error.message,
+          stack: error.stack ? error.stack : null
+        }, (err) => {
+          if(err) {
+            return rj(err);
+          }
+          rs();
+        }
+      );
+    });
   }
 
 }
