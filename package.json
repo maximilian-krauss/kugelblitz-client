@@ -1,6 +1,6 @@
 {
   "name": "kugelblitz-client",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "main": "index.js",
   "description": "node.js client for kugelblitz logging framework",
   "scripts": {},
