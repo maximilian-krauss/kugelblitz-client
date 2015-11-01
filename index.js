@@ -13,7 +13,8 @@ class Client {
       intervalInSeconds: 5 * 60,
       requestTimeoutInSeconds: 1 * 60,
       production: process.env.NODE_ENV === 'production',
-      debug: false
+      debug: false,
+      callbackUrl: null
     };
 
     const mergedOptions = _.extend(
@@ -27,26 +28,20 @@ class Client {
     this.token = mergedOptions.token;
     this.production = mergedOptions.production;
     this.debug = mergedOptions.debug;
+    this.callbackUrl = mergedOptions.callbackUrl;
 
-    if(!this.endpoint) {
-      throw new Error('An endpoint must be provided!');
-    }
+    if(!this.endpoint) throw new Error('An endpoint must be provided!');
 
-    if(!this.token) {
-      throw new Error('A token must be provided!');
-    }
+    if(!this.token) throw new Error('A token must be provided!');
 
     if(this.intervalInSeconds <= this.requestTimeoutInSeconds) {
       throw new Error(`The interval (${this.intervalInSeconds}s) must be greater than the request timeout (${this.requestTimeoutInSeconds}s)`);
     }
 
-    if(!this.production) {
-      console.log(clientName, 'The production option is set to false. No API calls will be made');
-    }
+    if(!this.production) console.log(clientName, 'The production option is set to false. No API calls will be made');
 
-    if(this.debug) {
-      console.log(clientName, 'Debug mode is active');
-    }
+    if(this.debug) console.log(clientName, 'Debug mode is active');
+
 
     this._sendHeartbeat();
 
@@ -58,7 +53,7 @@ class Client {
   }
 
   _sendHeartbeat() {
-    const options = {
+    let options = {
       url: urljoin(this.endpoint, '/api/v1/heartbeat'),
       method: 'POST',
       json: true,
@@ -67,6 +62,12 @@ class Client {
         'X-KUGELBLITZ-TOKEN': this.token
       }
     };
+
+    if(this.callbackUrl) {
+      options.body = {
+        callback: { url: this.callbackUrl }
+      };
+    }
 
     if(!this.production) {
       return;
